@@ -48,4 +48,4 @@ Installed 20 object(s) from 1 fixture(s)
 * 'ad/' - Ad model endpoints
 * 'user/' - User model endpoints
 * '' - welcome page
-'admin/' - django admin panel
+* 'admin/' - django admin panel
