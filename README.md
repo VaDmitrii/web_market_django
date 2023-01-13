@@ -2,7 +2,7 @@
 
 ### Users can create their adds, choose categories and sell their stuff
 
-## How to test the app
+## How to run the app
 
 Create virtual environment:
 ```
