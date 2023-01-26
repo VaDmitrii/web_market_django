@@ -5,8 +5,10 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from rest_framework.generics import ListAPIView
 
 from ads.models import Ad
+from ads.serializers import AdListSerializer, AdDetailSerializer, AdCreateSerializer
 from homework_27 import settings
 
 
@@ -19,43 +21,53 @@ def index(request):
     )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
-class AdListView(ListView):
-    model = Ad
+class AdListView(ListAPIView):
+    queryset = Ad.objects.all()
+    serializer_class = AdListSerializer
 
     def get(self, request, *args, **kwargs):
-        super().get(request, *args, *kwargs)
 
-        self.object_list = self.object_list.order_by("-price")
-
-        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        ads = []
-        for ad in page_obj:
-            ads.append(
-                {
-                    "id": ad.id,
-                    "name": ad.name,
-                    "author_id": ad.author.id,
-                    'author': ad.author.first_name,
-                    "price": ad.price,
-                    "description": ad.description,
-                    "is_published": ad.is_published,
-                    "category_id": ad.category.id,
-                    "image": ad.image.url if ad.image else None,
-                }
+        ad_category = request.GET.get('cat', None)
+        if ad_category:
+            self.queryset = self.queryset.filter(
+                category__id__exact=ad_category
             )
-        return JsonResponse(
-            {
-                "items": ads,
-                "total": paginator.count,
-                "num_pages": paginator.num_pages
-            },
-            status=200,
-            safe=False
-        )
+
+        name_text = request.GET.get('text', None)
+        if name_text:
+            self.queryset = self.queryset.filter(
+                name__icontains=name_text
+            )
+        location_name = request.GET.get('location', None)
+        if location_name:
+            self.queryset = self.queryset.filter(
+                author__location__name__icontains=location_name
+            )
+
+        start_price = request.GET.get('price_from', None)
+        end_price = request.GET.get('price_to', None)
+        if start_price and end_price:
+            self.queryset = self.queryset.filter(
+                price__range=(start_price, end_price)
+            )
+
+        self.queryset = self.queryset.order_by("-price")
+
+        return super().get(request, *args, *kwargs)
+
+        # paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
+        # page_number = request.GET.get('page')
+        # page_obj = paginator.get_page(page_number)
+
+        # return JsonResponse(
+        #     {
+        #         "items": AdListSerializer(page_obj, many=True).data,
+        #         "total": paginator.count,
+        #         "num_pages": paginator.num_pages
+        #     },
+        #     status=200,
+        #     safe=False
+        # )
 
 
 class AdDetailView(DetailView):
@@ -65,17 +77,7 @@ class AdDetailView(DetailView):
         ad = self.get_object()
 
         return JsonResponse(
-            {
-                "id": ad.id,
-                "name": ad.name,
-                "author_id": ad.author.id,
-                'author': ad.author.first_name,
-                "price": ad.price,
-                "description": ad.description,
-                "is_published": ad.is_published,
-                "category_id": ad.category.id,
-                "image": ad.image.url if ad.image else None,
-            },
+            AdDetailSerializer(ad).data,
             status=200,
         )
 
@@ -86,31 +88,26 @@ class AdCreateView(CreateView):
     fields = "__all__"
 
     def post(self, request, *args, **kwargs):
-        ad_data = json.loads(request.body)
+        ad_data = AdCreateSerializer(data=json.loads(request.body))
 
-        ad = Ad.objects.create(
-            name=ad_data.get("name"),
-            author_id=ad_data.get("author_id"),
-            price=ad_data.get("price"),
-            description=ad_data.get("description"),
-            is_published=ad_data.get("is_published"),
-            image=request.FILES.get("image"),
-            category_id=ad_data.get("category_id"),
-        )
-        ad.save()
+        if ad_data.is_valid():
+            ad_data.save()
+        else:
+            return JsonResponse(ad_data.errors)
+
+        # ad = Ad.objects.create(
+        #     name=ad_data.get("name"),
+        #     author_id=ad_data.get("author_id"),
+        #     price=ad_data.get("price"),
+        #     description=ad_data.get("description"),
+        #     is_published=ad_data.get("is_published"),
+        #     image=request.FILES.get("image"),
+        #     category_id=ad_data.get("category_id"),
+        # )
+        # ad.save()
 
         return JsonResponse(
-            {
-                "id": ad.id,
-                "name": ad.name,
-                "author_id": ad.author.id,
-                'author': ad.author.first_name,
-                "price": ad.price,
-                "description": ad.description,
-                "is_published": ad.is_published,
-                "category_id": ad.category.id,
-                "image": ad.image.url if ad.image else None,
-            },
+            ad_data.data,
             status=200,
             safe=False
         )
@@ -162,7 +159,6 @@ class AdUpdateView(UpdateView):
         self.object.category_id = ad_data.get("category_id")
 
         self.object.save()
-
 
         return JsonResponse(
             {
