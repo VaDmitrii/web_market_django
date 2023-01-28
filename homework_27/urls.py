@@ -14,6 +14,7 @@ urlpatterns = [
     path('cat/', include('category.urls')),
     path('ad/', include('ads.urls')),
     path('user/', include('users.urls')),
+    path('selection/', include('selection.urls')),
     path('', views.index),
     path('admin/', admin.site.urls),
 ]

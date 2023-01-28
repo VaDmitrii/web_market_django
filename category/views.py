@@ -98,5 +98,3 @@ class CatDeleteView(DeleteView):
         super().delete(request, *args, **kwargs)
 
         return JsonResponse({'status': 'ok'}, status=200)
-
-

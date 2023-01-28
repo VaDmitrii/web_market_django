@@ -41,11 +41,13 @@ Installed 20 object(s) from 1 fixture(s)
 * Category - category unit
 * User - user unit (roles: user, moderator, admin)
 * Location - location unit(user location)
+* Selection - selection of ads liked by User
 
 ## API's endpoints
 
 * 'cat/' - Category model endpoints
 * 'ad/' - Ad model endpoints
 * 'user/' - User model endpoints
+* 'selection/' - ads selection each user can create
 * '' - welcome page
 * 'admin/' - django admin panel
