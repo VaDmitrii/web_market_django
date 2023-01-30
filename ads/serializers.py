@@ -4,6 +4,11 @@ from ads.models import Ad
 from category.models import Category
 
 
+def status_false(value: str):
+    if value in ["TRUE"]:
+        raise serializers.ValidationError("Ad publishing status should be FALSE")
+
+
 class AdListSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='username')
 
@@ -44,6 +49,8 @@ class AdCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     author = serializers.ReadOnlyField(source='username')
     image = serializers.ImageField(required=False)
+    is_published = serializers.CharField(required=False, validators=[status_false])
+    name = serializers.CharField(min_length=10)
 
     class Meta:
         model = Ad
@@ -66,6 +73,8 @@ class AdUpdateSerializer(serializers.ModelSerializer):
         required=False,
         queryset=Category.objects.all()
     )
+    is_published = serializers.CharField(required=False, validators=[status_false])
+    name = serializers.CharField(min_length=10)
 
     class Meta:
         model = Ad

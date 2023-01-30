@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from category.models import Category
@@ -6,10 +7,10 @@ from users.models import User
 
 class Ad(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, blank=False)
     author_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    price = models.IntegerField()
-    description = models.CharField(max_length=2000)
+    price = models.IntegerField(validators=[MinValueValidator(0)])
+    description = models.CharField(max_length=2000, blank=True)
     is_published = models.CharField(max_length=20)
     image = models.ImageField(upload_to='images/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

@@ -12,6 +12,7 @@ class Category(models.Model):
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, choices=CHOICES, null=True)
+    slug = models.CharField(max_length=10, unique=True, null=True)
 
     class Meta:
         verbose_name = 'Категория'

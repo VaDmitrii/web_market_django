@@ -26,6 +26,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=30, choices=ROLES, null=True)
     age = models.IntegerField(null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
+    date_of_birth = models.DateField(null=True)
 
     class Meta:
         verbose_name = 'Пользователь'

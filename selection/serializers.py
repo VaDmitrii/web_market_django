@@ -3,6 +3,7 @@ from rest_framework import serializers
 from ads.models import Ad
 from ads.serializers import AdDetailSerializer
 from selection.models import Selection
+from users.models import User
 
 
 class SelectionListSerializer(serializers.ModelSerializer):
@@ -26,6 +27,11 @@ class SelectionCreateSerializer(serializers.ModelSerializer):
         required=False,
         many=True,
         queryset=Ad.objects.all()
+    )
+    owner = serializers.PrimaryKeyRelatedField(
+        required=False,
+        queryset=User.objects.all(),
+        default=serializers.CurrentUserDefault()
     )
 
     class Meta:
