@@ -1,27 +1,23 @@
 import pytest
 
+from tests.factories import UserFactory
 from users.models import User
 
 
 @pytest.fixture
 @pytest.mark.django_db
-def user_token_jwt(client, user):
-    username = "test_user"
-    password = "test123"
+def user_token_jwt(client):
+    username = 'test_user'
+    password = 'test123'
 
-    # user = User.objects.get(id=4)
-    # user.is_active = True
-    # user.save()
-
-    # django_user_model.objects.create(
-    #     username=username, password=password
-    # )
+    user = User.objects.last()
+    user.set_password(password)
+    user.save()
 
     response = client.post(
-        "/user/token/",
-        {"username": user.username, "password": password},
-        format="json"
+        '/user/token/',
+        data={'username': username, 'password': password},
+        format='json'
     )
 
-    return response.data["access"]
-
+    return response.data['access']

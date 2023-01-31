@@ -23,13 +23,14 @@ class UserFactory(factory.django.DjangoModelFactory):
     date_of_birth = "2000-01-22"
     email = "tests@test.ru"
     role = "moderator"
+    is_active = True
 
 
 class AdFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Ad
 
-    name = "test"
+    name = "test_advertising"
     author_id = factory.SubFactory(UserFactory)
     price = 100
     description = "None"

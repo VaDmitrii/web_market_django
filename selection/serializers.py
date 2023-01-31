@@ -24,8 +24,8 @@ class SelectionDetailSerializer(serializers.ModelSerializer):
 class SelectionCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     items = serializers.PrimaryKeyRelatedField(
-        required=False,
         many=True,
+        required=False,
         queryset=Ad.objects.all()
     )
     owner = serializers.PrimaryKeyRelatedField(
@@ -45,9 +45,8 @@ class SelectionCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         selection = Selection.objects.create(**validated_data)
 
-        for item in self._items:
-            item = Ad.objects.get(pk=item)
-            selection.items.add(item)
+        ad = Ad.objects.get(pk=self._items)
+        selection.items.add(ad)
 
         selection.save()
 
