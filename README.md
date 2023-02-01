@@ -1,6 +1,6 @@
-# Django-based app for market
+# Web market backend
 
-### Users can create their adds, choose categories and sell their stuff
+### Users can create their adds, choose categories and sell their products or services.
 
 ## How to run the app
 
@@ -51,3 +51,10 @@ Installed 20 object(s) from 1 fixture(s)
 * 'selection/' - ads selection each user can create
 * '' - welcome page
 * 'admin/' - django admin panel
+* 'api/schema/swagger-ui/' - API documentaion
+
+## Endpoints use order (Postman)
+
+* 'user/create/' - create new User in PostgreSQL database by providing 'username', 'password', 'email' and 'date_ob_birth'(JSON)
+* 'user/token/' - retrieve JWT 'access' and 'refresh' tokens by providing 'username' and 'password' of user created on previous step
+* Now you can send CRUD requests to all endpoints of API. More information you can see in API's documentation on 'api/schema/swagger-ui/' endpoint 
