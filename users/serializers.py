@@ -1,16 +1,9 @@
 import re
 
 from rest_framework import serializers
-from datetime import date
 
 from users.models import User, Location
 
-
-def age_min(value: date):
-    if date.today().year - value.year < 9:
-        raise serializers.ValidationError(
-            "User must be at least 9 years old"
-        )
 
 
 def clean_email(email: str):
@@ -47,7 +40,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 class UserCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     email = serializers.CharField(required=True, validators=[clean_email])
-    date_of_birth = serializers.DateField(required=True, validators=[age_min])
+    date_of_birth = serializers.DateField(required=True)
 
     class Meta:
         model = User
@@ -57,6 +50,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create(**validated_data)
 
         user.set_password(validated_data.get("password"))
+        user.is_active = True
         user.save()
 
         return user
@@ -66,7 +60,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     role = serializers.CharField(read_only=True)
     email = serializers.CharField(required=False, validators=[clean_email])
-    date_of_birth = serializers.DateField(required=False, validators=[age_min])
+    date_of_birth = serializers.DateField(required=False)
 
     class Meta:
         model = User
@@ -76,6 +70,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "last_name",
             "username",
             "password",
+            "email",
+            'date_of_birth',
             "role",
             "age",
             "location"

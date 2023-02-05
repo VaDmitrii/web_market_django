@@ -12,11 +12,17 @@ pillow = "^9.3.0"
 psycopg2 = "^2.9.5"
 djangorestframework = "^3.14.0"
 djangorestframework-simplejwt = "5.1"
+
+[tool.poetry.group.test.dependencies]
 pytest-django = "^4.5.2"
 pytest-factoryboy = "^2.5.1"
-
+drf-spectacular = "^0.25.1"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = 'homework_27.settings'
+python_files = ['ad_test.py']

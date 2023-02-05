@@ -5,10 +5,12 @@ from django.views.generic import UpdateView
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from ads.models import Ad
+from ads.models import Ad, Category, Selection
 from ads.permissions import IsAuthorOrStaff
 from ads.serializers import AdListSerializer, AdDetailSerializer, AdCreateSerializer, AdUpdateSerializer, \
-    AdDestroySerializer
+    AdDestroySerializer, CategoryDestroySerializer, CategoryUpdateSerializer, CategoryCreateSerializer, \
+    CategoryDetailSerializer, CategoryListSerializer, SelectionDestroySerializer, SelectionUpdateSerializer, \
+    SelectionCreateSerializer, SelectionDetailSerializer, SelectionListSerializer
 
 
 def index(request):
@@ -18,6 +20,31 @@ def index(request):
         },
         status=200
     )
+
+
+class CatListView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
+
+
+class CatDetailView(RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
+
+
+class CatCreateView(CreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryCreateSerializer
+
+
+class CatUpdateView(UpdateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryUpdateSerializer
+
+
+class CatDeleteView(DestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDestroySerializer
 
 
 class AdListView(ListAPIView):
@@ -110,3 +137,31 @@ class AdImageView(UpdateView):
             status=200,
             safe=False
         )
+
+
+class SelectionListView(ListAPIView):
+    queryset = Selection.objects.all()
+    serializer_class = SelectionListSerializer
+
+
+class SelectionDetailView(RetrieveAPIView):
+    queryset = Selection.objects.all()
+    serializer_class = SelectionDetailSerializer
+
+
+class SelectionCreateView(CreateAPIView):
+    queryset = Selection.objects.all()
+    serializer_class = SelectionCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class SelectionUpdateView(UpdateAPIView):
+    queryset = Selection.objects.all()
+    serializer_class = SelectionUpdateSerializer
+    permission_classes = [IsAuthenticated, IsAuthorOrStaff]
+
+
+class SelectionDestroyView(DestroyAPIView):
+    queryset = Selection.objects.all()
+    serializer_class = SelectionDestroySerializer
+    permission_classes = [IsAuthenticated, IsAuthorOrStaff]

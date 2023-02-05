@@ -19,10 +19,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'ads',
-    'category',
     'users',
-    'selection',
+    'ads',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -96,19 +95,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# TOTAL_ON_PAGE = 2
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 2,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ]
+    ],
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Web market API",
+    "DESCRIPTION": "Web market to post ads and sell products and services",
+    "VERSION": "1.0.0",
 }
 
 AUTH_USER_MODEL = 'users.User'

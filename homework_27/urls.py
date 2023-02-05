@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from ads import views
 from homework_27 import settings
 from users.views import LocationViewSet
 
@@ -11,11 +10,11 @@ router = routers.SimpleRouter()
 router.register('location', LocationViewSet)
 
 urlpatterns = [
-    path('cat/', include('category.urls')),
-    path('ad/', include('ads.urls')),
+    # path('cat/', include('category.urls')),
+    path('', include('ads.urls')),
     path('user/', include('users.urls')),
-    path('selection/', include('selection.urls')),
-    path('', views.index),
+    # path('selection/', include('selection.urls')),
+    # path('', views.index),
     path('admin/', admin.site.urls),
 ]
 

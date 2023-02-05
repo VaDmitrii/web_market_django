@@ -1,5 +1,14 @@
+from datetime import date
+
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
+
+def age_min(value: date):
+    if date.today().year - value.year < 9:
+        raise ValidationError(
+            "User must be at least 9 years old"
+        )
 
 
 class Location(models.Model):
@@ -26,7 +35,9 @@ class User(AbstractUser):
     role = models.CharField(max_length=30, choices=ROLES, null=True)
     age = models.IntegerField(null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
-    date_of_birth = models.DateField(null=True)
+    date_of_birth = models.DateField(null=True, validators=[age_min])
+
+    USERNAME_FIELD = "username"
 
     class Meta:
         verbose_name = 'Пользователь'

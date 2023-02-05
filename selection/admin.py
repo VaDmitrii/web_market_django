@@ -1,5 +1,5 @@
-from django.contrib import admin
-
-from selection.models import Selection
-
-admin.site.register(Selection)
+# from django.contrib import admin
+#
+# from selection.models import Selection
+#
+# admin.site.register(Selection)

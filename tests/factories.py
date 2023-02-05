@@ -1,8 +1,8 @@
 import factory.django
 
-from ads.models import Ad
-from category.models import Category
-from selection.models import Selection
+from ads.models import Ad, Category, Selection
+# from category.models import Category
+# from selection.models import Selection
 from users.models import User
 
 
@@ -31,10 +31,10 @@ class AdFactory(factory.django.DjangoModelFactory):
         model = Ad
 
     name = "test_advertising"
-    author_id = factory.SubFactory(UserFactory)
+    author = factory.SubFactory(UserFactory)
     price = 100
     description = "None"
-    is_published = "FALSE"
+    is_published = False
     category = factory.SubFactory(CategoryFactory)
     image = None
 
