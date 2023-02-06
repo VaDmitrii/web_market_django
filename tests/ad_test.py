@@ -1,7 +1,25 @@
 import pytest
 
-from ads.models import Ad
 from ads.serializers import AdDetailSerializer
+
+
+@pytest.mark.django_db
+def test_get_token_success(client, user):
+    response = client.post(
+        '/user/token/',
+        data={'username': user.username, 'password': 'test123'},
+    )
+    assert response.status_code == 200
+    assert list(response.json().keys()) == ['refresh', 'access']
+
+
+@pytest.mark.django_db
+def test_get_token_invalid_credentials(client, user):
+    response = client.post(
+        '/user/token/',
+        data={'username': user.username, 'password': 'q1w2e3R$'},
+    )
+    assert response.status_code == 401
 
 
 @pytest.mark.django_db

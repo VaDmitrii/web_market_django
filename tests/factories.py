@@ -25,6 +25,10 @@ class UserFactory(factory.django.DjangoModelFactory):
     role = "moderator"
     is_active = True
 
+    @classmethod
+    def _create(cls, model_class, *args, **kwargs):
+        return cls._get_manager(model_class).create_user(*args, **kwargs)
+
 
 class AdFactory(factory.django.DjangoModelFactory):
     class Meta:
